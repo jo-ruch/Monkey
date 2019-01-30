@@ -1,20 +1,14 @@
-function createKey() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'api/generate');
-    xhr.send(null);
+let app = angular.module('monky', ['ngRoute']);
 
-    xhr.onreadystatechange = function () {
-        var DONE = 4; // readyState 4 means the request is done.
-        var OK = 200; // status 200 is a successful return.
-        if (xhr.readyState === DONE) {
-            if (xhr.status === OK) {
-                console.log(xhr.responseText); // 'This is the returned text.'
-                let res = JSON.parse(xhr.responseText);
-                document.getElementById('key').innerText = res._id;
-
-            }
-        } else {
-            console.log('Error: ' + xhr.status); // An error occurred during the request.
-        }
-    }
-}
+app.config(function($routeProvider) {
+   $routeProvider.when("/", {
+       templateUrl : 'home/main.html',
+       controller : "MainCtrl"
+   }).when('/editor/:key', {
+       templateUrl : 'editor/editor.html',
+       controller : "EditorCtrl"
+   }).when('/editor/', {
+       templateUrl : 'editor/editor.html',
+       controller : "EditorCtrl"
+   });
+});

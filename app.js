@@ -6,13 +6,14 @@ var sassMiddleware = require('node-sass-middleware');
 var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var keyRouter = require('./routes/keys');
 let apiRouter = require('./routes/api');
 
 var app = express();
 
-mongoose.connect('mongodb://localhost:27017/monky', {useNewUrlParser: true});
+mongoose.connect('mongodb://192.168.178.204:27017/monky', {useNewUrlParser: true});
 
+app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -26,7 +27,7 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/keys', keyRouter);
 app.use('/api', apiRouter);
 
 module.exports = app;

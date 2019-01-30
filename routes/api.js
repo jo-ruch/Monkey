@@ -16,45 +16,6 @@ router.get('/', function (req, res, next) {
     res.send('Welcome to the mock api');
 });
 
-router.get('/generate', function (req, res, next) {
-    let entry = new Monky();
-    entry.profiles.push(
-        {
-            name: "ltb",
-            content: [
-                {
-                    name: "id",
-                    type: "id"
-                },
-                {
-                    name: "projectId",
-                    type: "id"
-                }
-            ]
-        });
-
-    entry.profiles.push(
-        {
-            name: "ttb",
-            content: [
-                {
-                    name: "id",
-                    type: "id"
-                },
-                {
-                    name: "ltb",
-                    type: "id"
-                }
-            ]
-        });
-
-    entry.save(function (err, monky) {
-        if(err) return;
-        res.send(monky);
-    });
-
-});
-
 router.get('/:uuid/:profile', function (req, res, next) {
     let id = req.params.uuid;
 
@@ -99,6 +60,7 @@ router.get('/:uuid', function (req, res, next) {
             }
         });
     } else {
+        res.status(500);
         res.send("Not a valid uuid");
     }
 

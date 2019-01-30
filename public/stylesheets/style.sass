@@ -1,6 +1,104 @@
+$fore: rgba(255, 255, 255, 0.87)
+$back : #333
+
 body
   padding: 50px
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+  font: 14px "Roboto Mono", Helvetica, Arial, sans-serif
+  background: $back
+  color: $fore
+
+h1
+//font-family: 'Helvetica', sans-serif
+
+p
+//font-size: 18px
 
 a
-  color: #00B7FF
+  color: $fore
+
+ul
+  text-decoration: none
+  list-style: none
+  margin: 0
+  padding: 0
+
+  li
+    &:hover
+      text-decoration: underline
+      cursor: pointer
+
+button
+  background: none
+  border: 2px solid $fore
+  padding: 8px
+  color: $fore
+
+  &:hover
+    background: $fore
+    color: $back
+
+#main
+  #key
+    font-size: 24px
+    border: none
+    border-bottom: 2px solid $fore
+    padding: 8px
+    margin-left: 8px
+    display: inline-block
+    width: 400px
+    outline: none
+    background: $back
+    color: $fore
+
+    &::placeholder
+      color: $fore
+      font-family: "Roboto Mono", sans-serif
+
+#editor
+  h1
+    display: inline-block
+
+  input, select
+    font-size: 14px
+    border: none
+    border-bottom: 2px solid $fore
+    padding: 8px
+    background: none
+    color: $fore
+
+  #key
+    font-size: 24px
+    border: none
+    border-bottom: 2px solid $fore
+    padding: 8px
+    margin-left: 8px
+    display: inline-block
+    width: 400px
+    outline: none
+
+    &::placeholder
+      color: $fore
+      font-family: "Roboto Mono", sans-serif
+
+  #model-editor
+    margin-top: 50px
+
+  #model-list
+    margin-right: 50px
+    float: left
+
+  #field-editor
+    margin-right: 50px
+    float: left
+    ul
+      li:hover
+        text-decoration: none
+
+  #preview
+    float: left
+    pre
+      white-space: pre-wrap;       /* Since CSS 2.1 */
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      white-space: -pre-wrap;      /* Opera 4-6 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */

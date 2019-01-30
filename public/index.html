@@ -1,16 +1,21 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" ng-app="monky">
 
 <head>
-  <title>Monky</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
-  <script src="javascripts/monky.js"></script>
+    <title>Monky</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-route/angular-route.min.js"></script>
+    <script src="javascripts/monky.js"></script>
+    <script src="home/main.js"></script>
+    <script src="editor/editor.js"></script>
 </head>
 
 <body>
-  <h1>Welcome to Monky</h1>
-  <p>Are you ready to get started?</p>
-  <button onclick="createKey()">Start</button>
-  <p id="key"></p>
+
+<div ng-view></div>
+
 </body>
 
 </html>

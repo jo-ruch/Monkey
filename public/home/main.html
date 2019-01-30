@@ -1,0 +1,16 @@
+<div id="main">
+    <h1>Welcome to Monky</h1>
+    <p>Are you ready to get started?</p>
+    <button ng-click="createMonky()">GENERATE</button>
+    <input type="text" placeholder="Your key" id="key" contenteditable="true" ng-model="key">
+
+    <div ng-if="success">
+        <p>Yes! You just created your first Monky! Save this key so you can use it in your application.</p>
+
+        <p>You are now ready do create your first models.</p>
+        <button ng-click="editModel()">CREATE MODELS</button>
+
+    </div>
+
+
+</div>
