@@ -11,7 +11,7 @@ router.get('/generate', function (req, res, next) {
   crypto.randomBytes(32, function(err, buffer) {
     key = buffer.toString('hex');
   });
-  let entry = new Monky();
+  let entry = new Monky.key();
   entry.profiles.push(
       {
         name: "users",
@@ -55,7 +55,7 @@ router.get('/:uuid', function(req, res, next) {
     let id = req.params.uuid;
 
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
-        Monky.findById(id, '').exec(function (err, monky) {
+        Monky.key.findById(id, '').exec(function (err, monky) {
             if (err) {
                 console.log(err);
                 return;

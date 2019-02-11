@@ -7,10 +7,11 @@
             <h2>Models</h2>
             <ul>
                 <li ng-repeat="model in monkyKey.profiles" ng-click="editModel(model)">{{model.name}}</li>
+                <li ng-click="newModel(key)">+ New model</li>
             </ul>
         </div>
 
-        <div id="field-editor">
+        <div ng-show="activeModel.content" id="field-editor">
             <h2>Edit fields</h2>
             <ul>
                 <li ng-repeat="field in activeModel.content">
@@ -18,17 +19,17 @@
                         <input ng-model="field.name">
                     </label>
                     <label> Type
-                        <select ng-model="field.type">
-                            <option>Id</option>
-                            <option>String</option>
-                            <option>Number</option>
+                        <select ng-model="field.type"
+                                ng-options="type for type in types.available"
+                        >
                         </select>
                     </label>
                 </li>
             </ul>
+            <button ng-click="updateModel(activeModel)">UPDATE</button>
         </div>
 
-        <div id="preview">
+        <div ng-show="activeModel.content" id="preview">
             <h2>Preview</h2>
             <pre id="output">{{preview | json}}</pre>
         </div>
