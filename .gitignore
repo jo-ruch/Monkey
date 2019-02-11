@@ -4,3 +4,5 @@ package-lock.json
 .sass-cache
 *.css.map
 *.css
+
+*.map
