@@ -2,12 +2,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 let Profile = new Schema({
-    name : String,
+    name: String,
     content: []
 });
 
 let Monky = new Schema({
-   profiles : [Profile]
+    profiles: [Profile]
 });
 
-module.exports = mongoose.model('Monky', Monky);
+module.exports = {
+    profile: mongoose.model("Profile", Profile),
+    key: mongoose.model('Monky', Monky)
+};
