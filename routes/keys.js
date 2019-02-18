@@ -11,40 +11,9 @@ router.get('/generate', function (req, res, next) {
   crypto.randomBytes(32, function(err, buffer) {
     key = buffer.toString('hex');
   });
-  let entry = new Monky.key();
-  entry.profiles.push(
-      {
-        name: "users",
-        content: [
-          {
-            name: "id",
-            type: "id"
-          },
-          {
-            name: "username",
-            type: "string"
-          },
-          {
-            name: "email",
-            type: "string"
-          }
-        ]
-      });
 
-  entry.profiles.push(
-      {
-        name: "posts",
-        content: [
-          {
-            name: "id",
-            type: "id"
-          },
-          {
-            name: "ltb",
-            type: "id"
-          }
-        ]
-      });
+  let entry = new Monky.key();
+
   entry.save(function (err, monky) {
     if(err) return;
     res.send(monky);
