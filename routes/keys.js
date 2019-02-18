@@ -63,6 +63,7 @@ router.get('/:uuid', function(req, res, next) {
             if (monky !== null) {
                 res.send(monky);
             } else {
+                res.status(404);
                 res.send("Key does not exist");
             }
         });

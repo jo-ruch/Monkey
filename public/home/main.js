@@ -3,6 +3,27 @@ app.controller('MainCtrl', ['$scope', "$http", "$location", function ($scope, $h
     $scope.key = "";
     $scope.model = {};
     $scope.success = false;
+    $scope.validKey = false;
+    $scope.existingKey = false;
+
+    $scope.$watch("key", function (newKey) {
+        $scope.validKey = $scope.isValidKey(newKey);
+
+        if ($scope.validKey) {
+            $http.get("keys/" + newKey).then(res => {
+                console.log(res.data)
+                $scope.existingKey = true;
+                $scope.model = res.data;
+            }).catch(err => {
+                $scope.existingKey = false;
+            });
+        }
+    });
+
+    $scope.isValidKey = function (key) {
+        let exp = /^[0-9a-fA-F]{24}$/;
+        return key.match(exp);
+    };
 
     $scope.createMonky = function () {
         $http.get("keys/generate").then(function (res) {
@@ -14,8 +35,8 @@ app.controller('MainCtrl', ['$scope', "$http", "$location", function ($scope, $h
         });
     };
 
-    $scope.editModel = function() {
+    $scope.editModel = function () {
         console.log($scope.key);
-        $location.path('editor/'+$scope.key);
+        $location.path('editor/' + $scope.key);
     };
 }]);

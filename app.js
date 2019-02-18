@@ -11,7 +11,10 @@ let apiRouter = require('./routes/api');
 
 var app = express();
 
-mongoose.connect('mongodb://192.168.178.204:27017/monky', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost:27017/monky', {useNewUrlParser: true}).catch(function(err) {
+    console.error("Mongodb not started");
+    process.exit(1);
+});
 
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
