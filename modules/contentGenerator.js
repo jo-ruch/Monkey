@@ -9,17 +9,13 @@ function ContentGenerator() {
             case 'id':
                 return counters.acc++;
             case 'image':
-                return 'https://picsum.photos/200/300?random';
+                return 'https://picsum.photos/900/400?random&seed='+counters.acc;
         }
     }
 
-    this.generate = function (profile) {
+    this.generate = function (profile, counters) {
 
         let mockObject = {};
-        let counters = {
-            acc: 0,
-            seed: 1234
-        };
 
         profile.content.forEach(function (field) {
             mockObject[field.name] = dispatch(field.type, counters);

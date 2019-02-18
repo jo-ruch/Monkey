@@ -26,11 +26,12 @@
                     </label>
                 </li>
             </ul>
+            <button ng-click="addField(activeModel)">ADD</button>
             <button ng-click="updateModel(activeModel)">UPDATE</button>
         </div>
 
         <div ng-show="activeModel.content" id="preview">
-            <h2>Preview</h2>
+            <h2>Preview /api/{{key}}/{{activeModel.name}}</h2>
             <pre id="output">{{preview | json}}</pre>
         </div>
     </div>

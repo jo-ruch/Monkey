@@ -13,6 +13,12 @@ function handleError(res, err) {
 }
 
 router.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+router.use(function (req, res, next) {
     if (req.query.delay) {
         setTimeout(next, req.query.delay);
     } else {
@@ -52,6 +58,36 @@ router.post('/:uuid/models', function (req, res, next) {
     }
 });
 
+router.get('/:uuid/:profile/:id', function (req, res, next) {
+    Monky.key.findById(getUUID(req), '').exec(function (err, monky) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        if (monky !== null) {
+            monky.profiles.forEach(function (profile) {
+                console.log(profile, req.params, profile.name === req.params.profile);
+                if (profile.name === req.params.profile) {
+                    let response = [];
+                    let counters = {
+                        acc: req.params.id,
+                        seed: 1234
+                    };
+
+
+                    response.push(generator.generate(profile, counters));
+
+
+                    res.send(response[0]);
+                }
+            });
+        } else {
+            res.send("Key does not exist");
+        }
+    });
+});
+
 router.get('/:uuid/:profile', function (req, res, next) {
     Monky.key.findById(getUUID(req), '').exec(function (err, monky) {
         if (err) {
@@ -63,8 +99,17 @@ router.get('/:uuid/:profile', function (req, res, next) {
             monky.profiles.forEach(function (profile) {
                 console.log(profile, req.params, profile.name === req.params.profile);
                 if (profile.name === req.params.profile) {
+                    let response = [];
+                    let counters = {
+                        acc: 0,
+                        seed: 1234
+                    };
 
-                    res.send(generator.generate(profile));
+                    for (let i = 0; i < 100; i++) {
+                        response.push(generator.generate(profile, counters));
+                    }
+
+                    res.send(response);
                 }
             });
         } else {
@@ -81,7 +126,7 @@ router.post('/:uuid/:profile/', function (req, res, next) {
         let content = req.body;
 
         // Find the target model
-        let target = monkey.profiles.find(function(elem) {
+        let target = monkey.profiles.find(function (elem) {
             return elem.name === modelName;
         });
 

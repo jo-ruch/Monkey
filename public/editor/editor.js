@@ -32,7 +32,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
             $scope.monkyKey.profiles.push(model);
             $scope.activeModel = model;
 
-            $http.post("api/" + $scope.key + "/models", {name: modelName}).then(function(res) {
+            $http.post("api/" + $scope.key + "/models", {name: modelName}).then(function (res) {
 
             });
         }
@@ -43,15 +43,20 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         $scope.loadPreview($scope.key, model.name);
     };
 
-    $scope.updateModel = function(model) {
+    $scope.addField = function (model) {
+        // $http.post('api/' $scope.key + "/" + model.name, )
         console.log(model);
-        $http.post("api/" + $scope.key + "/" + model.name, model.content).then(function() {
+        model.content.push({name: "Item", type: "string"});
+    };
+
+    $scope.updateModel = function (model) {
+        $http.post("api/" + $scope.key + "/" + model.name, model.content).then(function () {
             $scope.loadPreview($scope.key, model.name);
         });
     };
 
     $scope.loadPreview = function (key, model) {
-        $http.get("api/" + key + "/" + model).then(function (res) {
+        $http.get("api/" + key + "/" + model + "/0").then(function (res) {
             console.log(JSON.stringify(res.data));
             $scope.preview = res.data;
         });
