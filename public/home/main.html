@@ -3,8 +3,8 @@
     <p>Are you ready to get started?</p>
     <button ng-click="createMonky()">GENERATE</button>
     <input type="text" placeholder="Your key" id="key" contenteditable="true" ng-model="key" ng-debounce="300">
-    <div ng-show="!validKey" >Not a valid key!</div>
-    <div ng-show="validKey && !existingKey" >This key does not exist!</div>
+    <div style="display: inline-block;" ng-show="!validKey">Not a valid key!</div>
+    <div style="display: inline-block;" ng-show="validKey && !existingKey">This key does not exist!</div>
 
     <div ng-if="success">
         <p>Yes! You just created your first MonKey! Save this key so you can use it in your application.</p>
@@ -12,8 +12,6 @@
         <p>You are now ready do create your first models.</p>
     </div>
 
-    <button ng-if="existingKey" ng-click="editModel()">EDIT MODELS</button>
-
-
+    <button ng-if="validKey && existingKey && key" ng-click="editModel()">EDIT MODELS</button>
 
 </div>

@@ -3,20 +3,21 @@ app.controller('MainCtrl', ['$scope', "$http", "$location", function ($scope, $h
     $scope.key = "";
     $scope.model = {};
     $scope.success = false;
-    $scope.validKey = false;
-    $scope.existingKey = false;
+    $scope.validKey = true;
+    $scope.existingKey = true;
 
     $scope.$watch("key", function (newKey) {
-        $scope.validKey = $scope.isValidKey(newKey);
+        if (newKey !== "") {
+            $scope.validKey = $scope.existingKey = $scope.isValidKey(newKey);
 
-        if ($scope.validKey) {
-            $http.get("keys/" + newKey).then(res => {
-                console.log(res.data)
-                $scope.existingKey = true;
-                $scope.model = res.data;
-            }).catch(err => {
-                $scope.existingKey = false;
-            });
+            if ($scope.validKey) {
+                $http.get("keys/" + newKey).then(res => {
+                    $scope.existingKey = true;
+                    $scope.model = res.data;
+                }).catch(err => {
+                    $scope.existingKey = false;
+                });
+            }
         }
     });
 
