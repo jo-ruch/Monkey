@@ -31,7 +31,7 @@
         </div>
 
         <div ng-show="activeModel.content" id="preview">
-            <h2>Preview /api/{{key}}/{{activeModel.name}}</h2>
+            <h2>Preview <a target="_blank" href="/api/{{key}}/{{activeModel.name}}">/api/{{key}}/{{activeModel.name}}</a></h2>
             <pre id="output">{{preview | json}}</pre>
         </div>
     </div>
