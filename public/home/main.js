@@ -28,7 +28,7 @@ app.controller('MainCtrl', ['$scope', "$http", "$location", function ($scope, $h
 
     $scope.createMonky = function () {
         $http.get("keys/generate").then(function (res) {
-            console.log(res.data);
+            // console.log(res.data);
             $scope.model = res.data;
             $scope.key = $scope.model._id;
 

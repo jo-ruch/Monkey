@@ -18,11 +18,15 @@
                     <label> Name
                         <input ng-model="field.name">
                     </label>
+
                     <label> Type
-                        <select ng-model="field.type"
-                                ng-options="type for type in types.available"
-                        >
+                        <select ng-model="field.type">
+                            <option ng-repeat="(key, type) in types">{{key}}</option>
                         </select>
+                    </label>
+
+                    <label ng-repeat="meta in types[field.type].meta"> {{meta.name}}
+                        <input ng-model="getMeta(field, meta.name).value">
                     </label>
                 </li>
             </ul>
@@ -31,7 +35,8 @@
         </div>
 
         <div ng-show="activeModel.content" id="preview">
-            <h2>Preview <a target="_blank" href="/api/{{key}}/{{activeModel.name}}">/api/{{key}}/{{activeModel.name}}</a></h2>
+            <h2>Preview <a target="_blank"
+                           href="/api/{{key}}/{{activeModel.name}}">/api/{{key}}/{{activeModel.name}}</a></h2>
             <pre id="output">{{preview | json}}</pre>
         </div>
     </div>
