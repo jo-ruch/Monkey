@@ -37,7 +37,7 @@ app.controller('MainCtrl', ['$scope', "$http", "$location", function ($scope, $h
     };
 
     $scope.editModel = function () {
-        console.log($scope.key);
+        // console.log($scope.key);
         $location.path('editor/' + $scope.key);
     };
 }]);

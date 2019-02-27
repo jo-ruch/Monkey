@@ -27,7 +27,6 @@ function delay(req, res, next) {
 }
 
 function amount(req, res, next) {
-    // console.log(req.query);
     if (req.query && !req.query.amount) {
         req.query.amount = 50;
     }
@@ -86,7 +85,6 @@ router.get('/:uuid/:profile/:id', function (req, res, next) {
 
         if (monky !== null) {
             monky.profiles.forEach(function (profile) {
-                // console.log(profile, req.params, profile.name === req.params.profile);
                 if (profile.name === req.params.profile) {
                     let response = [];
                     let counters = {
@@ -111,7 +109,6 @@ router.get('/:uuid/:profile', function (req, res, next) {
 
         if (monky !== null) {
             monky.profiles.forEach(function (profile) {
-                // console.log(profile, req.params, profile.name === req.params.profile);
                 if (profile.name === req.params.profile) {
                     let response = [];
                     let counters = {
@@ -176,7 +173,7 @@ router.get('/:uuid', function (req, res, next) {
 
     Monky.key.findById(getUUID(req), 'profiles.name').exec(function (err, monky) {
         if (err) {
-            console.log(err);
+            console.error(err);
             return;
         }
         if (monky !== null) {

@@ -1,4 +1,5 @@
 let lorem = require('lorem-ipsum');
+let randName = require('random-name');
 
 function ContentGenerator() {
 
@@ -8,8 +9,8 @@ function ContentGenerator() {
 
     function getMeta(meta, name) {
         let size = meta.length;
-        for(let i = 0; i < size; i++) {
-            if(name === meta[i].name) {
+        for (let i = 0; i < size; i++) {
+            if (name === meta[i].name) {
                 return meta[i].value;
             }
         }
@@ -17,18 +18,31 @@ function ContentGenerator() {
     }
 
     function dispatch(type, meta, counters) {
-        console.log(meta);
+        // console.log(meta);
         switch (type) {
             case 'string':
-                let wordCount = getMeta(meta, "words");
+                let minWords = parseInt(getMeta(meta, "min"));
+                let maxWords = parseInt(getMeta(meta, "max"));
                 return addCaptical(lorem({
-                    count: wordCount ? wordCount : 10, // Very tricky
+                    count: Math.random() * (maxWords - minWords) + minWords,
                     units: 'words'
                 }));
             case 'id':
                 return counters.acc++;
             case 'image':
-                return 'https://picsum.photos/900/400?random&seed=' + counters.acc;
+                let height = getMeta(meta, "height");
+                let width = getMeta(meta, "width");
+                return 'https://picsum.photos/' + height + '/' + width + '?random&seed=' + counters.acc;
+            case 'number':
+                let start = parseFloat(getMeta(meta, 'start'));
+                let end = parseFloat(getMeta(meta, 'end'));
+                let decimals = getMeta(meta, 'decimals');
+                if (isNaN(start) || isNaN(end)) return "Invalid input";
+                return parseFloat((Math.random() * (end - start)) + start).toFixed(decimals);
+            case 'name':
+                return randName.first() + " " + randName.last();
+            case 'city':
+                return randName.place();
         }
     }
 

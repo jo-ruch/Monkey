@@ -9,21 +9,29 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
             meta: [{name: "start", default: 0}]
         },
         string: {
-            meta: [{name: "words", default: 10}]
+            meta: [{name: "min", default: 1}, {name:'max', default:10}]
         },
         image: {
             meta: [{name: "height", default: 800}, {name: 'width', default: 600}]
+        },
+
+        number: {
+            meta: [{name: 'start', default: 0}, {name: 'end', default: 100}, {name: 'decimals', default: 2}]
+        },
+
+        name: {
+            meta: []
+        },
+
+        city: {
+            meta: []
         }
     };
-    // $scope.types.available = ['id', 'string', 'image'];
-    // $scope.types.meta = {}
 
     $scope.loadKey = function (key) {
         $http.get("keys/" + key).then(function (res) {
             $scope.monkyKey = res.data;
             $scope.key = $scope.monkyKey._id;
-
-            // console.log($scope.monkyKey);
         }).catch(function (err) {
             $scope.key = "Not a valid key";
         });
@@ -55,7 +63,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
     };
 
     $scope.addField = function (model) {
-        model.content.push({name: "Item", type: "string", meta:[]});
+        model.content.push({name: "Item", type: "string", meta: []});
     };
 
     $scope.updateModel = function (model) {
@@ -89,6 +97,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         }
 
         return target;
+
     };
 
 }]);
