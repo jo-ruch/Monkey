@@ -1,3 +1,5 @@
+let helpers = require('./../helpers');
+
 module.exports = new function () {
     this.generate = function (meta) {
         let rate = parseFloat(helpers.getMeta(meta, 'rate'));
