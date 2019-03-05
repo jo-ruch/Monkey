@@ -5,16 +5,15 @@ let randName = require('random-name');
 let numberGenerator = require('./generators/numberGenerator');
 let stringGenerator = require('./generators/stringGenerator');
 let imageGenerator = require('./generators/imageGenerator');
+let booleanGenerator = require('./generators/booleanGenerator');
 
 function ContentGenerator() {
-
     function dispatch(type, meta, counters) {
         switch (type) {
             case 'boolean':
-                let rate = parseFloat(helpers.getMeta(meta, 'rate'));
-                return Math.random() < rate;
+                return booleanGenerator.generate(meta);
             case 'static':
-                return helpers.getMeta(meta, 'content');
+                return helpers.getMeta(meta, 'content'); // A little tricky dicky... TODO: Make safer
             case 'string':
                 return stringGenerator.generate(meta);
             case 'id':
@@ -28,6 +27,7 @@ function ContentGenerator() {
             case 'city':
                 return randName.place();
             case 'object':
+                // TODO This will become quite large. Call this.generate to build recursive object
                 let model = helpers.getMeta(meta, 'name');
                 return {};
             case 'array':
