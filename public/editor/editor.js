@@ -72,10 +72,11 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
     };
 
     $scope.addField = function (model) {
-        model.content.push({name: "Item", type: "string", meta: []});
+        model.content.push({name: "Item", type: "string", meta: []}); // Meta filled in by angular
     };
 
     $scope.updateModel = function (model) {
+        // Post new model and update view
         $http.post("api/" + $scope.key + "/" + model.name, model.content).then(function () {
             $scope.loadPreview($scope.key, model.name);
         });
@@ -83,7 +84,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
 
     $scope.loadPreview = function (key, model) {
         $http.get("api/" + key + "/" + model + "/0").then(function (res) {
-            $scope.preview = res.data;
+            $scope.preview = res.data; // Update preview
         });
     };
 
@@ -94,15 +95,13 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
     };
 
     $scope.changeType = function (field) {
-        field.meta = cleanMeta(field.type, field.meta);
-        // field.meta = []; // Clear meta of old type
-        // return false;
+        field.meta = cleanMeta(field.type, field.meta); // Clean unused meta elements
     };
 
     function initMeta(type, meta) {
         // Initialize missing meta fields
         $scope.types[type].meta.forEach(function (_meta) {
-            if (!$scope.findMetaByName(meta, _meta.name)) { // Of element does not exist yet
+            if (!$scope.findMetaByName(meta, _meta.name)) { // If element does not exist yet
                 meta.push({name: _meta.name, value: _meta.default}); // Initialize default item
             }
         });
@@ -111,12 +110,11 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
     function cleanMeta(type, meta) {
         let res = [];
         let source = $scope.types[type].meta;
-        console.log("Source: ", source);
 
+        // Copy over elements that belong to this type
         for (let i = 0; i < source.length; i++) {
 
             let elem = meta.find(function (_elem) {
-                console.log(_elem, source[i]);
                 return _elem.name === source[i].name;
             });
 
@@ -124,7 +122,6 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
                 res.push(elem);
             }
         }
-        console.log("Res: ", res);
         return res;
     }
 
@@ -137,9 +134,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         if (field.type === "array") {
             initMeta($scope.findMetaByName(field.meta, 'type').value, field.meta);
         }
-
         return field.meta;
-
     }
 
 }]);
