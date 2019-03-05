@@ -1,62 +1,38 @@
-let lorem = require('lorem-ipsum');
+let helpers = require('./helpers');
 let randName = require('random-name');
 
+// GENERATORS
+let numberGenerator = require('./generators/numberGenerator');
+let stringGenerator = require('./generators/stringGenerator');
+let imageGenerator = require('./generators/imageGenerator');
+
 function ContentGenerator() {
-
-    function addCaptical(text) {
-        return text.charAt(0).toUpperCase() + text.slice(1);
-    }
-
-    function getMeta(meta, name) {
-        let size = meta.length;
-        for (let i = 0; i < size; i++) {
-            if (name === meta[i].name) {
-                return meta[i].value;
-            }
-        }
-        return undefined;
-    }
 
     function dispatch(type, meta, counters) {
         switch (type) {
             case 'boolean':
-                let rate = parseFloat(getMeta(meta, 'rate'));
+                let rate = parseFloat(helpers.getMeta(meta, 'rate'));
                 return Math.random() < rate;
             case 'static':
-                return getMeta(meta, 'content');
+                return helpers.getMeta(meta, 'content');
             case 'string':
-                let minWords = parseInt(getMeta(meta, "min"));
-                let maxWords = parseInt(getMeta(meta, "max"));
-                return addCaptical(lorem({
-                    count: Math.random() * (maxWords - minWords) + minWords,
-                    units: 'words'
-                }));
+                return stringGenerator.generate(meta);
             case 'id':
                 return counters.acc;
             case 'image':
-                let height = getMeta(meta, "height");
-                let width = getMeta(meta, "width");
-                return 'https://picsum.photos/' + height + '/' + width + '?random&seed=' + counters.acc;
+                return imageGenerator.generate(meta, counters);
             case 'number':
-                let start = parseFloat(getMeta(meta, 'start'));
-                let end = parseFloat(getMeta(meta, 'end'));
-                let decimals = getMeta(meta, 'decimals');
-                if (isNaN(start) || isNaN(end)) return "Invalid input";
-                try {
-                    return parseFloat((Math.random() * (end - start)) + start).toFixed(decimals);
-                } catch {
-                    return "Incorrect decimal format";
-                }
+                return numberGenerator.generate(meta);
             case 'name':
                 return randName.first() + " " + randName.last();
             case 'city':
                 return randName.place();
             case 'object':
-                let model = getMeta(meta, 'name');
+                let model = helpers.getMeta(meta, 'name');
                 return {};
             case 'array':
-                let type = getMeta(meta, 'type');
-                let length = getMeta(meta, 'length');
+                let type = helpers.getMeta(meta, 'type');
+                let length = helpers.getMeta(meta, 'length');
                 let res = [];
                 let localCounters = {
                     acc: 0,
