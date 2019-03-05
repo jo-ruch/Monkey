@@ -118,6 +118,7 @@ router.get('/:uuid/:profile', function (req, res, next) {
 
                     for (let i = 0; i < req.query.amount; i++) {
                         response.push(generator.generate(profile, counters));
+                        counters.acc++;
                     }
 
                     res.send(response);

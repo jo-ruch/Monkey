@@ -20,14 +20,21 @@
                     </label>
 
                     <label> Type
-                        <select ng-model="field.type">
+                        <select ng-model="field.type" ng-change="changeType(field)">
                             <option ng-repeat="(key, type) in types">{{key}}</option>
                         </select>
                     </label>
 
-                    <label ng-repeat="meta in types[field.type].meta"> {{meta.name}}
-                        <input ng-model="getMeta(field, meta.name).value">
+                    <label ng-if="field.type === 'array'"> Elements
+                        <select ng-model="field.meta[0].value" ng-change="changeType(field)">
+                            <option ng-repeat="(key, type) in types">{{key}}</option>
+                        </select>
                     </label>
+
+                    <label  ng-repeat="meta in getFieldMeta(field)"> {{meta.name}}
+                        <input ng-model="meta.value">
+                    </label>
+
                 </li>
             </ul>
             <button ng-click="addField(activeModel)">ADD</button>

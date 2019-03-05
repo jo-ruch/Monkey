@@ -8,8 +8,14 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         id: {
             meta: [{name: "start", default: 0}]
         },
+        boolean: {
+            meta: [{name:'rate', default:0.5}]
+        },
+        static: {
+            meta: [{name: 'content', default: ''}]
+        },
         string: {
-            meta: [{name: "min", default: 1}, {name:'max', default:10}]
+            meta: [{name: "min", default: 1}, {name: 'max', default: 10}]
         },
         image: {
             meta: [{name: "height", default: 800}, {name: 'width', default: 600}]
@@ -25,6 +31,9 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
 
         city: {
             meta: []
+        },
+        array: {
+            meta: [{name: 'type', default: 'string'}, {name: 'length', default: 10}]
         }
     };
 
@@ -84,20 +93,53 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         });
     };
 
-    $scope.getMeta = function (field, name) {
+    $scope.changeType = function (field) {
+        field.meta = cleanMeta(field.type, field.meta);
+        // field.meta = []; // Clear meta of old type
+        // return false;
+    };
 
-        let target = $scope.findMetaByName(field.meta, name);
+    function initMeta(type, meta) {
+        // Initialize missing meta fields
+        $scope.types[type].meta.forEach(function (_meta) {
+            if (!$scope.findMetaByName(meta, _meta.name)) { // Of element does not exist yet
+                meta.push({name: _meta.name, value: _meta.default}); // Initialize default item
+            }
+        });
+    }
 
-        if (target === undefined) {
-            target = {
-                name: name,
-                value: $scope.findMetaByName($scope.types[field.type].meta, name).default
-            };
-            field.meta.push(target);
+    function cleanMeta(type, meta) {
+        let res = [];
+        let source = $scope.types[type].meta;
+        console.log("Source: ", source);
+
+        for (let i = 0; i < source.length; i++) {
+
+            let elem = meta.find(function (_elem) {
+                console.log(_elem, source[i]);
+                return _elem.name === source[i].name;
+            });
+
+            if (elem) {
+                res.push(elem);
+            }
+        }
+        console.log("Res: ", res);
+        return res;
+    }
+
+    $scope.getFieldMeta = function (field) {
+
+        // Initialize missing meta fields
+        initMeta(field.type, field.meta);
+
+        // Append array meta
+        if (field.type === "array") {
+            initMeta($scope.findMetaByName(field.meta, 'type').value, field.meta);
         }
 
-        return target;
+        return field.meta;
 
-    };
+    }
 
 }]);
