@@ -1,6 +1,8 @@
 let helpers = require('./helpers');
 let randName = require('random-name');
 
+let Monky = require('../models/monky');
+
 // GENERATORS
 let numberGenerator = require('./generators/numberGenerator');
 let stringGenerator = require('./generators/stringGenerator');
@@ -8,7 +10,8 @@ let imageGenerator = require('./generators/imageGenerator');
 let booleanGenerator = require('./generators/booleanGenerator');
 
 function ContentGenerator() {
-    function dispatch(type, meta, counters) {
+
+    async function dispatch(type, meta, counters, UUID) {
         switch (type) {
             case 'boolean':
                 return booleanGenerator.generate(meta);
@@ -27,37 +30,73 @@ function ContentGenerator() {
             case 'city':
                 return randName.place();
             case 'object':
-                // TODO This will become quite large. Call this.generate to build recursive object
+
                 let model = helpers.getMeta(meta, 'name');
-                return {};
+
+                return new Promise(function (resolve, reject) {
+                    Monky.key.findById(UUID, '').exec(function (err, monky) {
+
+                        if (err) return "Error";
+
+                        if (monky !== null) {
+                            for (let i = 0; i < monky.profiles.length; i++) {
+
+                                if (monky.profiles[i].name === model) {
+
+                                    let counters = {
+                                        acc: 0,
+                                        seed: 1234
+                                    };
+
+                                    return module.exports.generate(monky.profiles[i], counters, UUID).then(function (object) {
+                                        resolve(object);
+                                    });
+                                }
+                            }
+                            resolve("Invalid object");
+                        }
+                    });
+                });
             case 'array':
                 let type = helpers.getMeta(meta, 'type');
                 let length = helpers.getMeta(meta, 'length');
                 let res = [];
+                let chain = [];
                 let localCounters = {
                     acc: 0,
                     seed: 1234
                 };
                 for (let i = 0; i < length; i++) {
-                    res.push(dispatch(type, meta, localCounters));
+                    chain.push(dispatch(type, meta, localCounters, UUID).then(function (_res) {
+                        res.push(_res);
+                    }));
                     localCounters.acc++;
                 }
-                return res;
+
+                return Promise.all(chain).then(function () {
+                    return res;
+                });
+
             default:
                 return "Unknown type";
         }
     }
 
-    this.generate = function (profile, counters) {
+    this.generate = function (profile, counters, UUID) {
 
+        let chain = [];
         let mockObject = {};
 
         profile.content.forEach(function (field) {
-            mockObject[field.name] = dispatch(field.type, field.meta, counters);
+            chain.push(dispatch(field.type, field.meta, counters, UUID).then(function (res) {
+                mockObject[field.name] = res;
+            }));
         });
 
-        return mockObject;
-
+        // Return promise with mock
+        return Promise.all(chain).then(function () {
+            return mockObject;
+        });
     }
 }
 

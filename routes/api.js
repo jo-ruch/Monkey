@@ -52,9 +52,9 @@ function randomize(req, res, next) {
 }
 
 router.use(allowCors);
+router.use(isValidRequest);
 router.use(delay);
 router.use(amount);
-router.use(isValidRequest);
 router.use(randomize);
 
 /* GET users listing. */
@@ -86,15 +86,16 @@ router.get('/:uuid/:profile/:id', function (req, res, next) {
         if (monky !== null) {
             monky.profiles.forEach(function (profile) {
                 if (profile.name === req.params.profile) {
-                    let response = [];
+
                     let counters = {
                         acc: req.params.id,
                         seed: 1234
                     };
 
-                    response.push(generator.generate(profile, counters));
+                    generator.generate(profile, counters, getUUID(req)).then(function (object) {
+                        res.send(object);
+                    });
 
-                    res.send(response[0]);
                 }
             });
         } else {
@@ -108,22 +109,30 @@ router.get('/:uuid/:profile', function (req, res, next) {
         if (err) return handleError(res, err);
 
         if (monky !== null) {
-            monky.profiles.forEach(function (profile) {
-                if (profile.name === req.params.profile) {
+            for (let i = 0; i < monky.profiles.length; i++) {
+
+                if (monky.profiles[i].name === req.params.profile) {
+                    console.log('building profile', monky.profiles[i].name);
                     let response = [];
+                    let chain = [];
+
                     let counters = {
                         acc: 0,
                         seed: 1234
                     };
 
-                    for (let i = 0; i < req.query.amount; i++) {
-                        response.push(generator.generate(profile, counters));
+                    for (let j = 0; j < req.query.amount; j++) {
+                        chain.push(generator.generate(monky.profiles[i], counters, getUUID(req)).then(function (_res) {
+                            response.push(_res);
+                        }));
                         counters.acc++;
                     }
 
-                    res.send(response);
+                    Promise.all(chain).then(function () {
+                        res.send(response);
+                    });
                 }
-            });
+            }
         } else {
             res.send("Key does not exist");
         }

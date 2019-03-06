@@ -32,6 +32,9 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         city: {
             meta: []
         },
+        object: {
+            meta: [{name: "name", default: ""}]
+        },
         array: {
             meta: [{name: 'type', default: 'string'}, {name: 'length', default: 10}]
         }
