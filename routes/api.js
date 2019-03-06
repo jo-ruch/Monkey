@@ -139,44 +139,9 @@ router.get('/:uuid/:profile', function (req, res, next) {
     });
 });
 
-router.post('/:uuid/:profile/', function (req, res, next) {
-    Monky.key.findById(getUUID(req), '').exec(function (err, monkey) {
-        if (err) return handleError(res, err);
-
-        let modelName = req.params.profile;
-        let content = req.body;
-
-        // Find the target model
-        let target = monkey.profiles.find(function (elem) {
-            return elem.name === modelName;
-        });
-
-        target.content = []; // Delete old content
-
-        // Only copy over valid fields and meta fields
-        content.forEach(function (field) {
-
-            let newField = new Monky.field();
-            newField.name = field.name;
-            newField.type = field.type;
-
-            field.meta.forEach(function (metaField) {
-                let newMetaField = new Monky.meta();
-                newMetaField.name = metaField.name;
-                newMetaField.value = metaField.value;
-                newField.meta.push(newMetaField);
-            });
-
-            target.content.push(newField);
-
-        });
-
-        monkey.save();
-
-        res.send("Model updated");
-
-
-    });
+// post
+router.post('/:uuid/:profile', function (req, res, next) {
+    res.send(req.body);
 });
 
 router.get('/:uuid', function (req, res, next) {

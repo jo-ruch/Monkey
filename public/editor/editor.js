@@ -63,7 +63,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
             $scope.monkyKey.profiles.push(model);
             $scope.activeModel = model;
 
-            $http.post("api/" + $scope.key + "/models", {name: modelName}).then(function (res) {
+            $http.post("keys/" + $scope.key + "/models", {name: modelName}).then(function (res) {
 
             });
         }
@@ -80,7 +80,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
 
     $scope.updateModel = function (model) {
         // Post new model and update view
-        $http.post("api/" + $scope.key + "/" + model.name, model.content).then(function () {
+        $http.post("keys/" + $scope.key + "/" + model.name, model.content).then(function () {
             $scope.loadPreview($scope.key, model.name);
         });
     };
