@@ -16,7 +16,7 @@ router.get('/generate', function (req, res, next) {
     let entry = new Monky.key();
 
     entry.save(function (err, monky) {
-        if (err) return;
+        if (err) return helpers.handleError(res, err);
         res.send(monky);
     });
 });
@@ -28,10 +28,18 @@ router.post('/:uuid/:profile/', function (req, res, next) {
         let modelName = req.params.profile;
         let content = req.body;
 
+        if (!modelName || !content) {
+            return helpers.handleError(res, "Invalid post");
+        }
+
         // Find the target model
         let target = monkey.profiles.find(function (elem) {
             return elem.name === modelName;
         });
+
+        if (!target || !target.content) {
+            return helpers.handleError(res, "Corrupt key");
+        }
 
         target.content = []; // Delete old content
 
