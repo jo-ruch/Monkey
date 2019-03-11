@@ -28,7 +28,7 @@ router.post('/:uuid/:profile/', function (req, res, next) {
         let modelName = req.params.profile;
         let content = req.body;
 
-        if (!modelName || !content) {
+        if (!modelName || !content || !Array.isArray(content)) {
             return helpers.handleError(res, "Invalid post");
         }
 
@@ -44,7 +44,12 @@ router.post('/:uuid/:profile/', function (req, res, next) {
         target.content = []; // Delete old content
 
         // Only copy over valid fields and meta fields
-        content.forEach(function (field) {
+        for (let field of content) {
+
+            // Check if all fields exist
+            if (!field.name || !field.type || !field.meta) {
+                return helpers.handleError(res, "Corrupt key");
+            }
 
             let newField = new Monky.field();
             newField.name = field.name;
@@ -59,13 +64,14 @@ router.post('/:uuid/:profile/', function (req, res, next) {
 
             target.content.push(newField);
 
-        });
+        }
 
         monkey.save();
 
         res.send("Model updated");
 
-    });
+    })
+    ;
 });
 
 router.get('/:uuid', function (req, res, next) {
