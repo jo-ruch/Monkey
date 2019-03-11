@@ -8,17 +8,22 @@ router.get('/', function (req, res, next) {
     res.send("No key provided");
 });
 
-router.get('/generate', function (req, res, next) {
-    crypto.randomBytes(32, function (err, buffer) {
-        key = buffer.toString('hex');
-    });
+// Create new model
+router.post('/:uuid/models', function (req, res, next) {
+    if (req.body.name) {
+        Monky.key.findById(helpers.getUUID(req), '').exec(function (err, monky) {
+            if (err) return helpers.handleError(res, err);
 
-    let entry = new Monky.key();
-
-    entry.save(function (err, monky) {
-        if (err) return helpers.handleError(res, err);
-        res.send(monky);
-    });
+            let model = new Monky.profile(); // Create new profile
+            model.name = req.body.name; // Assign name to profile
+            monky.profiles.push(model); // Add new profile to monkey
+            monky.save(); // Save updated monkey
+        });
+        res.send("Model created");
+    } else {
+        res.status(500);
+        res.send("No valid model name provided");
+    }
 });
 
 router.post('/:uuid/:profile/', function (req, res, next) {
@@ -48,7 +53,12 @@ router.post('/:uuid/:profile/', function (req, res, next) {
 
             // Check if all fields exist
             if (!field.name || !field.type || !field.meta) {
-                return helpers.handleError(res, "Corrupt key");
+                let msg = "";
+                if (!field.name) msg = "Name missing";
+                if (!field.type) msg = "Type missing";
+                if (!field.meta) msg = "Meta missing";
+
+                return helpers.handleError(res, "Corrupt key" + msg);
             }
 
             let newField = new Monky.field();

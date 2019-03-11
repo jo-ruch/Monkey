@@ -62,23 +62,6 @@ router.get('/', function (req, res, next) {
     res.send('Welcome to the mock api');
 });
 
-router.post('/:uuid/models', function (req, res, next) {
-    if (req.body.name) {
-        Monky.key.findById(getUUID(req), '').exec(function (err, monky) {
-            if (err) return handleError(res, err);
-
-            let model = new Monky.profile(); // Create new profile
-            model.name = req.body.name; // Assign name to profile
-            monky.profiles.push(model); // Add new profile to monkey
-            monky.save(); // Save updated monkey
-        });
-        res.send("Model created");
-    } else {
-        res.status(500);
-        res.send("No valid model name provided");
-    }
-});
-
 router.get('/:uuid/:profile/:id', function (req, res, next) {
     Monky.key.findById(getUUID(req), '').exec(function (err, monky) {
         if (err) return handleError(res, err);

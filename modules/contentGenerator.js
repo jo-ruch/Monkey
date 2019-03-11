@@ -8,6 +8,7 @@ let numberGenerator = require('./generators/numberGenerator');
 let stringGenerator = require('./generators/stringGenerator');
 let imageGenerator = require('./generators/imageGenerator');
 let booleanGenerator = require('./generators/booleanGenerator');
+let datetimeGenerator = require('./generators/datetimeGenerator');
 
 function ContentGenerator() {
 
@@ -29,6 +30,10 @@ function ContentGenerator() {
                 return randName.first() + " " + randName.last();
             case 'city':
                 return randName.place();
+            case 'date':
+                return datetimeGenerator.date.generate();
+            case 'time':
+                return datetimeGenerator.time.generate();
             case 'object':
 
                 let model = helpers.getMeta(meta, 'name');
