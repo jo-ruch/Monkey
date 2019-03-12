@@ -1,11 +1,21 @@
 var express = require('express');
 var router = express.Router();
-let crypto = require('crypto');
 let Monky = require('./../models/monky');
 let helpers = require('./../modules/helpers');
 
 router.get('/', function (req, res, next) {
     res.send("No key provided");
+});
+
+router.get('/generate', function (req, res, next) {
+
+    let entry = new Monky.key();
+
+    entry.save(function (err, monky) {
+        if (err) return helpers.handleError(res, err);
+        res.send(monky);
+    });
+
 });
 
 // Create new model
