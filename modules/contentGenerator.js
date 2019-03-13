@@ -12,7 +12,7 @@ let datetimeGenerator = require('./generators/datetimeGenerator');
 
 function ContentGenerator() {
 
-    async function dispatch(type, meta, counters, UUID) {
+    async function dispatch(type, meta, counters, UUID, depthCounter) {
         switch (type) {
             case 'boolean':
                 return booleanGenerator.generate(meta);
@@ -53,7 +53,7 @@ function ContentGenerator() {
                                         seed: 1234
                                     };
 
-                                    return module.exports.generate(monky.profiles[i], counters, UUID).then(function (object) {
+                                    return module.exports.generate(monky.profiles[i], counters, UUID, depthCounter).then(function (object) {
                                         resolve(object);
                                     });
                                 }
@@ -87,13 +87,20 @@ function ContentGenerator() {
         }
     }
 
-    this.generate = function (profile, counters, UUID) {
+    this.generate = function (profile, counters, UUID, depthCounter) {
+
+        depthCounter += 1; // Keep track of recursive stack depth to prevent circular includes
+
+        // Limit stack depth to 10
+        if (depthCounter > 10) {
+            return Promise.resolve("Max depth reached");
+        }
 
         let chain = [];
         let mockObject = {};
 
         profile.content.forEach(function (field) {
-            chain.push(dispatch(field.type, field.meta, counters, UUID).then(function (res) {
+            chain.push(dispatch(field.type, field.meta, counters, UUID, depthCounter).then(function (res) {
                 mockObject[field.name] = res;
             }));
         });
