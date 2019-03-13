@@ -1,4 +1,5 @@
 <div id="main">
+    <img id="logo" src="../assets/logo.svg" alt="Logo">
     <h1>Welcome to MonKey</h1>
     <p>Are you ready to get started?</p>
     <button ng-click="createMonky()">GENERATE</button>
@@ -12,6 +13,12 @@
         <p>You are now ready do create your first models.</p>
     </div>
 
-    <button ng-if="validKey && existingKey && key" ng-click="editModel()">EDIT MODELS</button>
+    <button ng-if="validKey && existingKey && key" ng-click="editModel(key)">EDIT MODELS</button>
+    <button ng-if="validKey && existingKey && key" ng-click="saveKey(key)" alt="Save the key in the browser">SAVE</button>
+
+    <h2 ng-show="savedKeys.length > 0">Saved keys</h2>
+    <ul id="key-list">
+        <li ng-repeat="obj in savedKeys track by $index"><span class="key" ng-click="editModel(obj.key)">{{obj.name}} {{obj.key}}</span> <span class="remove" ng-click="removeSavedKey($index)">&Chi;</span></li>
+    </ul>
 
 </div>

@@ -8,14 +8,12 @@ body
   color: $fore
 
 h1
-//font-family: 'Helvetica', sans-serif
-
-p
-//font-size: 18px
+  display: inline-block
 
 a
   color: $fore
   text-decoration: none
+
   &:hover
     text-decoration: underline
 
@@ -24,11 +22,6 @@ ul
   list-style: none
   margin: 0
   padding: 0
-
-  li
-    &:hover
-      text-decoration: underline
-      cursor: pointer
 
 button
   background: none
@@ -39,6 +32,13 @@ button
   &:hover
     background: $fore
     color: $back
+    display: inline-block
+
+#logo
+  height: 100px
+  width: 100px
+  vertical-align: middle
+  margin-right: 32px
 
 #main
   #key
@@ -57,9 +57,22 @@ button
       color: $fore
       font-family: "Roboto Mono", sans-serif
 
+  #key-list
+    li
+      span.key:hover, span.remove:hover
+        cursor: pointer
+        text-decoration: underline
+
+
 #editor
   h1
     display: inline-block
+
+  ul
+    li
+      &:hover
+        text-decoration: underline
+        cursor: pointer
 
   input, select
     font-size: 14px
@@ -69,6 +82,9 @@ button
     background: none
     color: $fore
     outline: none
+
+  input
+    width: 75px
 
   option
     color: $fore

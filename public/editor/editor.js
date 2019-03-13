@@ -1,4 +1,4 @@
-app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scope, $http, $routeParams) {
+app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", "$location", function ($scope, $http, $routeParams, $location) {
     $scope.key = "";
     $scope.monkyKey = {};
     $scope.activeModel = {};
@@ -44,6 +44,10 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", function ($scop
         array: {
             meta: [{name: 'type', default: 'string'}, {name: 'length', default: 10}]
         }
+    };
+
+    $scope.goHome = function() {
+        $location.path('/');
     };
 
     $scope.loadKey = function (key) {
