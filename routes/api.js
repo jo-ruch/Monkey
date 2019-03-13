@@ -75,7 +75,7 @@ router.get('/:uuid/:profile/:id', function (req, res, next) {
                         seed: 1234
                     };
 
-                    generator.generate(profile, counters, getUUID(req), 0).then(function (object) {
+                    generator.generate(profile, counters, getUUID(req), 0, monky.profiles).then(function (object) {
                         res.send(object);
                     });
 
@@ -105,7 +105,7 @@ router.get('/:uuid/:profile', function (req, res, next) {
                     };
 
                     for (let j = 0; j < req.query.amount; j++) {
-                        chain.push(generator.generate(monky.profiles[i], counters, getUUID(req), 0).then(function (_res) {
+                        chain.push(generator.generate(monky.profiles[i], counters, getUUID(req), 0, monky.profiles).then(function (_res) {
                             response.push(_res);
                         }));
                         counters.acc++;

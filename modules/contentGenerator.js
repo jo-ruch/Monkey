@@ -12,7 +12,7 @@ let datetimeGenerator = require('./generators/datetimeGenerator');
 
 function ContentGenerator() {
 
-    async function dispatch(type, meta, counters, UUID, depthCounter) {
+    async function dispatch(type, meta, counters, UUID, depthCounter, models) {
         switch (type) {
             case 'boolean':
                 return booleanGenerator.generate(meta);
@@ -39,28 +39,21 @@ function ContentGenerator() {
                 let model = helpers.getMeta(meta, 'name');
 
                 return new Promise(function (resolve, reject) {
-                    Monky.key.findById(UUID, '').exec(function (err, monky) {
+                    for (let i = 0; i < models.length; i++) {
 
-                        if (err) return "Error";
+                        if (models[i].name === model) {
 
-                        if (monky !== null) {
-                            for (let i = 0; i < monky.profiles.length; i++) {
+                            let counters = {
+                                acc: 0,
+                                seed: 1234
+                            };
 
-                                if (monky.profiles[i].name === model) {
-
-                                    let counters = {
-                                        acc: 0,
-                                        seed: 1234
-                                    };
-
-                                    return module.exports.generate(monky.profiles[i], counters, UUID, depthCounter).then(function (object) {
-                                        resolve(object);
-                                    });
-                                }
-                            }
-                            resolve("Invalid object");
+                            return module.exports.generate(models[i], counters, UUID, depthCounter, models).then(function (object) {
+                                resolve(object);
+                            });
                         }
-                    });
+                    }
+                    resolve("Invalid object");
                 });
             case 'array':
                 let type = helpers.getMeta(meta, 'type');
@@ -72,7 +65,7 @@ function ContentGenerator() {
                     seed: 1234
                 };
                 for (let i = 0; i < length; i++) {
-                    chain.push(dispatch(type, meta, localCounters, UUID).then(function (_res) {
+                    chain.push(dispatch(type, meta, localCounters, UUID, depthCounter, models).then(function (_res) {
                         res.push(_res);
                     }));
                     localCounters.acc++;
@@ -87,12 +80,12 @@ function ContentGenerator() {
         }
     }
 
-    this.generate = function (profile, counters, UUID, depthCounter) {
+    this.generate = function (profile, counters, UUID, depthCounter, models) {
 
         depthCounter += 1; // Keep track of recursive stack depth to prevent circular includes
 
         // Limit stack depth to 10
-        if (depthCounter > 10) {
+        if (depthCounter > 5) {
             return Promise.resolve("Max depth reached");
         }
 
@@ -100,7 +93,7 @@ function ContentGenerator() {
         let mockObject = {};
 
         profile.content.forEach(function (field) {
-            chain.push(dispatch(field.type, field.meta, counters, UUID, depthCounter).then(function (res) {
+            chain.push(dispatch(field.type, field.meta, counters, UUID, depthCounter, models).then(function (res) {
                 mockObject[field.name] = res;
             }));
         });
