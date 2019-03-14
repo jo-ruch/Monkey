@@ -71,7 +71,7 @@ router.get('/:uuid/:profile/:id', function (req, res, next) {
                 if (profile.name === req.params.profile) {
 
                     let counters = {
-                        acc: req.params.id,
+                        acc: parseInt(req.params.id),
                         seed: 1234
                     };
 
@@ -95,7 +95,6 @@ router.get('/:uuid/:profile', function (req, res, next) {
             for (let i = 0; i < monky.profiles.length; i++) {
 
                 if (monky.profiles[i].name === req.params.profile) {
-                    console.log('building profile', monky.profiles[i].name);
                     let response = [];
                     let chain = [];
 
@@ -104,7 +103,11 @@ router.get('/:uuid/:profile', function (req, res, next) {
                         seed: 1234
                     };
 
-                    for (let j = 0; j < req.query.amount; j++) {
+                    // Limit query amount to 1000
+                    let amount = req.query.amount;
+                    amount = amount > 1000 ? 1000 : amount;
+
+                    for (let j = 0; j < amount; j++) {
                         chain.push(generator.generate(monky.profiles[i], counters, getUUID(req), 0, monky.profiles).then(function (_res) {
                             response.push(_res);
                         }));

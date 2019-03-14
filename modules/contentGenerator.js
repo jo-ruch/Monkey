@@ -1,14 +1,13 @@
 let helpers = require('./helpers');
-let randName = require('random-name');
-
-let Monky = require('../models/monky');
 
 // GENERATORS
+let idGenerator = require('./generators/idGenerator');
 let numberGenerator = require('./generators/numberGenerator');
 let stringGenerator = require('./generators/stringGenerator');
 let imageGenerator = require('./generators/imageGenerator');
 let booleanGenerator = require('./generators/booleanGenerator');
 let datetimeGenerator = require('./generators/datetimeGenerator');
+let nameGenerator = require('./generators/nameGenerator');
 
 function ContentGenerator() {
 
@@ -21,15 +20,15 @@ function ContentGenerator() {
             case 'string':
                 return stringGenerator.generate(meta);
             case 'id':
-                return counters.acc;
+                return idGenerator.generate(counters);
             case 'image':
                 return imageGenerator.generate(meta, counters);
             case 'number':
                 return numberGenerator.generate(meta);
             case 'name':
-                return randName.first() + " " + randName.last();
+                return nameGenerator.name.generate();
             case 'city':
-                return randName.place();
+                return nameGenerator.city.generate();
             case 'date':
                 return datetimeGenerator.date.generate();
             case 'time':
@@ -38,26 +37,35 @@ function ContentGenerator() {
 
                 let model = helpers.getMeta(meta, 'name');
 
+                if (!model) return "Corrupt field";
+
                 return new Promise(function (resolve, reject) {
                     for (let i = 0; i < models.length; i++) {
 
                         if (models[i].name === model) {
 
-                            let counters = {
+                            let _counters = {
                                 acc: 0,
                                 seed: 1234
                             };
 
-                            return module.exports.generate(models[i], counters, UUID, depthCounter, models).then(function (object) {
+                            return module.exports.generate(models[i], _counters, UUID, depthCounter, models).then(function (object) {
                                 resolve(object);
                             });
                         }
                     }
-                    resolve("Invalid object");
+                    resolve("Unknown object");
                 });
             case 'array':
                 let type = helpers.getMeta(meta, 'type');
                 let length = helpers.getMeta(meta, 'length');
+
+                if (!length || !type) {
+                    return "Corrupt field";
+                }
+
+                length = length > 1000 ? 1000 : length;
+
                 let res = [];
                 let chain = [];
                 let localCounters = {

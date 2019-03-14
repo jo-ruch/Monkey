@@ -6,7 +6,7 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", "$location", fu
 
     $scope.types = {
         id: {
-            meta: [{name: "start", default: 0}]
+            meta: []
         },
         boolean: {
             meta: [{name:'rate', default:0.5}]
