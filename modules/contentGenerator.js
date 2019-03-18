@@ -8,23 +8,28 @@ let imageGenerator = require('./generators/imageGenerator');
 let booleanGenerator = require('./generators/booleanGenerator');
 let datetimeGenerator = require('./generators/datetimeGenerator');
 let nameGenerator = require('./generators/nameGenerator');
+let staticGenerator = require('./generators/staticGenerator');
 
 function ContentGenerator() {
 
     async function dispatch(type, meta, counters, UUID, depthCounter, models) {
         switch (type) {
+
+            // Basics
+            case 'static':
+                return staticGenerator.generate(meta);
             case 'boolean':
                 return booleanGenerator.generate(meta);
-            case 'static':
-                return helpers.getMeta(meta, 'content'); // A little tricky dicky... TODO: Make safer
+            case 'number':
+                return numberGenerator.generate(meta);
             case 'string':
                 return stringGenerator.generate(meta);
+
+            // Specials
             case 'id':
                 return idGenerator.generate(counters);
             case 'image':
                 return imageGenerator.generate(meta, counters);
-            case 'number':
-                return numberGenerator.generate(meta);
             case 'name':
                 return nameGenerator.name.generate();
             case 'city':
@@ -33,6 +38,12 @@ function ContentGenerator() {
                 return datetimeGenerator.date.generate();
             case 'time':
                 return datetimeGenerator.time.generate();
+            case 'email':
+                return null;
+            case 'password':
+                return null;
+
+            // Objects and arrays
             case 'object':
 
                 let model = helpers.getMeta(meta, 'name');

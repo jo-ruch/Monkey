@@ -20,15 +20,12 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", "$location", fu
         image: {
             meta: [{name: "height", default: 800}, {name: 'width', default: 600}]
         },
-
         number: {
             meta: [{name: 'start', default: 0}, {name: 'end', default: 100}, {name: 'decimals', default: 2}]
         },
-
         name: {
             meta: []
         },
-
         city: {
             meta: []
         },
@@ -36,6 +33,12 @@ app.controller("EditorCtrl", ["$scope", "$http", "$routeParams", "$location", fu
             meta: []
         },
         time: {
+            meta: []
+        },
+        email: {
+            meta: []
+        },
+        password: {
             meta: []
         },
         object: {
