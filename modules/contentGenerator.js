@@ -9,6 +9,7 @@ let booleanGenerator = require('./generators/booleanGenerator');
 let datetimeGenerator = require('./generators/datetimeGenerator');
 let nameGenerator = require('./generators/nameGenerator');
 let staticGenerator = require('./generators/staticGenerator');
+let emailGenerator = require('./generators/emailGenerator');
 
 function ContentGenerator() {
 
@@ -39,7 +40,7 @@ function ContentGenerator() {
             case 'time':
                 return datetimeGenerator.time.generate();
             case 'email':
-                return null;
+                return emailGenerator.generate(meta);
             case 'password':
                 return null;
 
