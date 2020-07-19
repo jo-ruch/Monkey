@@ -10,6 +10,9 @@ RUN npm install
 
 COPY . .
 
+# Install front-end dependencies
+RUN cd public && npm install
+
 EXPOSE 3000
 
 CMD ["npm", "start"]
