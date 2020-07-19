@@ -1,0 +1,12 @@
+version: "3"
+services:
+  monkey:
+    container_name: monkey
+    image: monkey:1.2
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo

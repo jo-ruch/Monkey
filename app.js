@@ -11,8 +11,9 @@ let apiRouter = require('./routes/api');
 
 var app = express();
 
-mongoose.connect('mongodb://192.168.178.204:27017/monky', {useNewUrlParser: true}).catch(function(err) {
-    console.error("Mongodb not started");
+mongoose.connect('mongodb://mongo:27017/monkey', {useNewUrlParser: true}).catch(function(err) {
+    console.error("Failed to connect to MongoDB");
+    console.log(err)
     process.exit(1);
 });
 
